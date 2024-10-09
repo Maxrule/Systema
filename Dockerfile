@@ -1,4 +1,7 @@
-FROM jenkins/jenkins:2.462.3-lts-centos7
+# Use the official Jenkins image for Ubuntu
+FROM jenkins/jenkins:lts
+
+# Switch to root user to install necessary packages
 USER root
 
 # Set Jenkins user and password
@@ -6,16 +9,23 @@ ENV JENKINS_USER Maxrule
 ENV JENKINS_PASS Max.2oo4koV
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 
-# Install required utilities for RPM building
-RUN yum install -y rpm-build rpmdevtools wget unzip \
-    && rm -rf /var/cache/yum/* && yum clean all
+# Update the package list and install required utilities for RPM building
+RUN apt-get update && \
+    apt-get install -y \
+    rpm \
+    rpm2cpio \
+    rpm2html \
+    wget \
+    unzip \
+    build-essential \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Create a working directory for Jenkins
 WORKDIR /var/jenkins_home
 
-# Expose ports
+# Expose the ports Jenkins will run on
 EXPOSE 8080
 EXPOSE 50000
 
 # Start Jenkins
-CMD ["/usr/local/bin/jenkins.sh"]
+CMD ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
