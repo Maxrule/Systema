@@ -31,26 +31,21 @@ jobs:
         run: |
           apt-get update
           apt-get install -y rpm wget unzip
+          # Ensure the rpmbuild directory structure exists
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 
       - name: Build RPM
         run: |
-          # Ensure the directories exist
-          mkdir -p ~/rpmbuild/SPECS
-          mkdir -p ~/rpmbuild/SOURCES
-          
-          # Copy the spec file
-          cp rpm/calcfiles.spec ~/rpmbuild/SPECS/
-          
-          # Download the source files
+          # Download the source files into the correct directory
           cd ~/rpmbuild/SOURCES/
           wget https://github.com/Maxrule/Systema/archive/main.zip -O main.zip
           
           # Unzip the downloaded file
           unzip -o main.zip
           
-          # Navigate to the unzipped directory
-          cd Systema-main/
+          # Setup the RPM build environment
+          mv Systema-main/rpm/calcfiles.spec ~/rpmbuild/SPECS/
+          mv Systema-main/calc_files.sh ~/rpmbuild/SPECS/
           
           # Build the RPM packages
           rpmbuild -bs --define "dist .generic" ~/rpmbuild/SPECS/calcfiles.spec
