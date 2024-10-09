@@ -17,6 +17,13 @@ jobs:
       image: ubuntu:20.04
 
     steps:
+      - name: Set Timezone to Kyiv
+        run: |
+          ln -sf /usr/share/zoneinfo/Europe/Kiev /etc/localtime
+          echo "Europe/Kiev" > /etc/timezone
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
+
       - name: Checkout code
         uses: actions/checkout@v2
 
