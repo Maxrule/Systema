@@ -5,8 +5,8 @@ Summary:        A simple script to calculate files in a directory
 Requires:       unzip
 
 License:        MIT
-URL:            https://github.com/men325/Systema
-Source0:        https://github.com/men325/Systema/archive/main.zip
+URL:            https://github.com/Maxrule/Systema
+Source0:        https://github.com/Maxrule/Systema/archive/main.zip
 
 BuildArch:      noarch
 
