@@ -13,6 +13,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    container:
+      image: ubuntu:20.04
+
     steps:
       - name: Set Timezone to Kyiv
         run: |
@@ -28,26 +31,18 @@ jobs:
         run: |
           apt-get update
           apt-get install -y rpm wget unzip
-          # Ensure the rpmbuild directory structure exists
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 
       - name: Build RPM
         run: |
-          # Use the absolute path for the rpmbuild directory
-          mkdir -p /home/runner/work/rpmbuild/SOURCES/
-          cd /home/runner/work/rpmbuild/SOURCES/
-          
-          # Download the source files into the correct directory
-          wget https://github.com/Maxrule/Systema/archive/main.zip -O main.zip
-          
-          # Unzip the downloaded file
-          unzip -o main.zip
-          
-          # Setup the RPM build environment
-          mv Systema-main/rpm/calcfiles.spec ~/rpmbuild/SPECS/
-          mv Systema-main/calc_files.sh ~/rpmbuild/SPECS/
-          
-          # Build the RPM packages
+          # Убедитесь, что директории существуют
+          mkdir -p ~/rpmbuild/SPECS
+          mkdir -p ~/rpmbuild/SOURCES
+          cp rpm/calcfiles.spec ~/rpmbuild/SPECS/
+          cd ~/rpmbuild/SOURCES/
+          wget https://github.com/Maxrule/Systema/archive/main.zip
+          unzip main.zip
+          cd Systema-main/
           rpmbuild -bs --define "dist .generic" ~/rpmbuild/SPECS/calcfiles.spec
           rpmbuild --rebuild ~/rpmbuild/SRPMS/calcfiles-1.0-1.generic.src.rpm
 
