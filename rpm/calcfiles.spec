@@ -22,7 +22,7 @@ ls -la
 
 %install
 mkdir -p %{buildroot}/usr/bin
-# Install the script to the build root
+cd Systema-main
 install -m 755 calc_files.sh %{buildroot}/usr/bin/calc_files
 
 %files
