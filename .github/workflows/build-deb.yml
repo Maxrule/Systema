@@ -18,6 +18,11 @@ jobs:
       image: ubuntu:20.04
 
     steps:
+      - name: Set Timezone to Kyiv
+        run: |
+          sudo ln -sf /usr/share/zoneinfo/Europe/Kiev /etc/localtime
+          echo "Europe/Kiev" | sudo tee /etc/timezone
+
       - name: Checkout code
         uses: actions/checkout@v2
 
