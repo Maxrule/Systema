@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: ubuntu
+      image: ubuntu:20.04
 
     steps:
       - name: Checkout code
