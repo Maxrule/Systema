@@ -6,7 +6,7 @@ Requires:       unzip
 
 License:        MIT
 URL:            https://github.com/Maxrule/Systema
-Source0:        https://github.com/Maxrule/Systema/archive/main.zip
+Source0:        main.zip
 
 BuildArch:      noarch
 
@@ -18,11 +18,12 @@ calc_files.sh is a simple script that calculates the number of files in a direct
 unzip -o %{SOURCE0}
 # Change to the extracted directory
 cd Systema-main/
+ls -la
 
 %install
 mkdir -p %{buildroot}/usr/bin
 # Install the script to the build root
-install -m 755 Systema-main/calc_files.sh %{buildroot}/usr/bin/calc_files
+install -m 755 calc_files.sh %{buildroot}/usr/bin/calc_files
 
 %files
 /usr/bin/calc_files
