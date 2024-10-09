@@ -14,12 +14,15 @@ BuildArch:      noarch
 calc_files.sh is a simple script that calculates the number of files in a directory.
 
 %prep
-unzip %SOURCE0
+# Unzip the source archive
+unzip -o %{SOURCE0}
+# Change to the extracted directory
 cd Systema-main/
 
 %install
 mkdir -p %{buildroot}/usr/bin
-install -m 755 %{_builddir}/Systema-main/calc_files.sh %{buildroot}/usr/bin/calc_files
+# Install the script to the build root
+install -m 755 Systema-main/calc_files.sh %{buildroot}/usr/bin/calc_files
 
 %files
 /usr/bin/calc_files
