@@ -35,8 +35,9 @@ jobs:
 
       - name: Build RPM
         run: |
-          # Убедитесь, что директория существует
+          # Убедитесь, что директории существуют
           mkdir -p ~/rpmbuild/SPECS
+          mkdir -p ~/rpmbuild/SOURCES
           cp rpm/calcfiles.spec ~/rpmbuild/SPECS/
           cd ~/rpmbuild/SOURCES/
           wget https://github.com/Maxrule/Systema/archive/main.zip
@@ -50,5 +51,5 @@ jobs:
         with:
           name: rpm-package
           path: |
-            ~/rpmbuild/RPMS//*.rpm
-            ~/rpmbuild/SRPMS//*.src.rpm
+            ~/rpmbuild/RPMS/*.rpm
+            ~/rpmbuild/SRPMS/*.src.rpm
