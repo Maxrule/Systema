@@ -5,12 +5,18 @@ pipeline {
         stage('Build RPM Package') {
             steps {
                 script {
+                    // Создаем структуру для сборки RPM
                     sh 'rpmdev-setuptree'
+                    // Загружаем исходный код с GitHub
                     sh 'wget https://github.com/Maxrule/Systema/archive/main.zip'
+                    // Распаковываем исходники
                     sh 'unzip main.zip'
+                    // Копируем .spec файл для сборки RPM
                     sh 'mv Systema-main/rpm/calcfiles.spec ~/rpmbuild/SPECS/'
-                    sh 'mv Systema-main/calc_files.sh ~/rpmbuild/SPECS/'
+                    // Перемещаем файл bash-скрипта в SPECS
+                    sh 'mv Systema-main/calc_files.sh ~/rpmbuild/SOURCES/'
                     sh 'mv main.zip ~/rpmbuild/SOURCES/'
+                    // Сборка SRPM и RPM пакетов
                     sh 'rpmbuild -bs --define "dist .generic" ~/rpmbuild/SPECS/calcfiles.spec'
                     sh 'rpmbuild --rebuild ~/rpmbuild/SRPMS/calcfiles-1.0-1.generic.src.rpm'
                 }
@@ -20,12 +26,15 @@ pipeline {
         stage('Install RPM Package') {
             steps {
                 script {
+                    // Установка собранного RPM пакета
                     sh 'rpm -ivh ~/rpmbuild/RPMS/noarch/calcfiles-1.0-1.el7.noarch.rpm'
                     
-                    // Выполните скрипт и выведите результат
-                    def result = sh(script: 'calc_files --check_dir=/etc', returnStdout: true).trim()
-                    echo result  // Показываем результат в консоли Jenkins
+                    // Выполнение bash-скрипта, который подсчитает файлы в каталоге /etc
+                    def result = sh(script: 'bash ~/rpmbuild/SOURCES/calc_files.sh --check_dir=/etc', returnStdout: true).trim()
+                    // Показ результата выполнения скрипта в консоли Jenkins
+                    echo result
                     
+                    // Очистка после выполнения
                     sh 'rm -r Systema-main'
                 }
             }

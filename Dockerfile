@@ -1,16 +1,21 @@
-FROM jenkins/jenkins:2.361.1-lts-centos7
+FROM jenkins/jenkins:2.462.3-lts-centos7
 USER root
-ENV JENKINS_USER admin
-ENV JENKINS_PASS admin
+
+# Set Jenkins user and password
+ENV JENKINS_USER Maxrule
+ENV JENKINS_PASS Max.2oo4koV
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 
-# Copy the Jenkins plugins file to the container
-RUN yum install -y yum-utils
-
-# Install utilities
-RUN yum install -y rpm-build rpmdevtools wget unzip rpmdev-setuptree \
+# Install required utilities for RPM building
+RUN yum install -y rpm-build rpmdevtools wget unzip \
     && rm -rf /var/cache/yum/* && yum clean all
 
+# Create a working directory for Jenkins
 WORKDIR /var/jenkins_home
 
-RUN jenkins-plugin-cli --plugins workflow-aggregator
+# Expose ports
+EXPOSE 8080
+EXPOSE 50000
+
+# Start Jenkins
+CMD ["/usr/local/bin/jenkins.sh"]
