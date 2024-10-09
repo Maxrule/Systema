@@ -20,10 +20,16 @@ jobs:
     steps:
       - name: Set Timezone to Kyiv
         run: |
+          set -e  # Прерывание при ошибке
+          echo "Setting timezone to Kyiv..."
           sudo ln -sf /usr/share/zoneinfo/Europe/Kiev /etc/localtime
+          echo "Timezone set to Europe/Kiev."
           echo "Europe/Kiev" | sudo tee /etc/timezone
+          echo "Installing tzdata..."
           sudo apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
+          echo "tzdata installed."
+
 
       - name: Checkout code
         uses: actions/checkout@v2
