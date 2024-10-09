@@ -1,13 +1,12 @@
-name: Build Debian Package
+name: Build RPM Package
 
 on:
   push:
     branches:
       - main
     paths:
-      - "debian/"
-      - ".sh"
-
+      - 'rpm/.spec'
+      - '.sh'
   workflow_dispatch:
 
 jobs:
@@ -18,29 +17,29 @@ jobs:
       image: ubuntu:20.04
 
     steps:
-      - name: Set Timezone to Kyiv
-        run: |
-          ln -sf /usr/share/zoneinfo/Europe/Kiev /etc/localtime
-          echo "Europe/Kiev" > /etc/timezone
-          apt-get update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
-
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build Debian
+      - name: Install RPM build tools
         run: |
-          mkdir testos && mkdir testos/DEBIAN
-          mkdir -p testos/usr/local/bin
-          cp calc_files.sh testos/usr/local/bin/
-          cp debian/control testos/DEBIAN
-          dpkg-deb --build testos
-          dpkg -i testos.deb
-          chmod +x /usr/local/bin/calc_files.sh
+          apt-get update
+          apt-get install -y rpm wget unzip
+          mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 
-      - name: Upload Debian
+      - name: Build RPM
+        run: |
+          cp rpm/calcfiles.spec ~/rpmbuild/SPECS/
+          cd ~/rpmbuild/SOURCES/
+          wget https://github.com/Maxrule/Systema/archive/main.zip
+          unzip main.zip
+          cd Systema-main/
+          rpmbuild -bs --define "dist .generic" ~/rpmbuild/SPECS/calcfiles.spec
+          rpmbuild --rebuild ~/rpmbuild/SRPMS/calcfiles-1.0-1.generic.src.rpm
+
+      - name: Upload RPM
         uses: actions/upload-artifact@v3
         with:
-          name: deb-package
+          name: rpm-package
           path: |
-            ~/*.deb
+            ~/rpmbuild/RPMS//*.rpm
+            ~/rpmbuild/SRPMS//*.src.rpm

@@ -18,6 +18,13 @@ jobs:
       image: ubuntu:20.04
 
     steps:
+      - name: Set Timezone to Kyiv
+        run: |
+          sudo ln -sf /usr/share/zoneinfo/Europe/Kiev /etc/localtime
+          echo "Europe/Kiev" | sudo tee /etc/timezone
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -28,8 +35,8 @@ jobs:
           cp calc_files.sh testos/usr/local/bin/
           cp debian/control testos/DEBIAN
           dpkg-deb --build testos
-          dpkg -i testos.deb
-          chmod +x /usr/local/bin/calc_files.sh
+          sudo dpkg -i testos.deb
+          sudo chmod +x /usr/local/bin/calc_files.sh
 
       - name: Upload Debian
         uses: actions/upload-artifact@v3
