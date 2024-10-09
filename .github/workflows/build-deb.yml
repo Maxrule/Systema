@@ -29,7 +29,11 @@ jobs:
           sudo apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
           echo "tzdata installed."
-
+      
+      - name: Check current timezone
+        run: |
+          echo "Current timezone before setting:"
+          cat /etc/timezone
 
       - name: Checkout code
         uses: actions/checkout@v2
