@@ -13,9 +13,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    container:
-      image: ubuntu:20.04
-
     steps:
       - name: Set Timezone to Kyiv
         run: |
@@ -36,8 +33,11 @@ jobs:
 
       - name: Build RPM
         run: |
+          # Use the absolute path for the rpmbuild directory
+          mkdir -p /home/runner/work/rpmbuild/SOURCES/
+          cd /home/runner/work/rpmbuild/SOURCES/
+          
           # Download the source files into the correct directory
-          cd ~/rpmbuild/SOURCES/
           wget https://github.com/Maxrule/Systema/archive/main.zip -O main.zip
           
           # Unzip the downloaded file
