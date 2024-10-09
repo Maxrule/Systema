@@ -1,0 +1,38 @@
+name: Check File Count
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.sh'
+  workflow_dispatch:
+
+jobs:
+  check-files:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ubuntu:20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set Timezone to Kyiv
+        run: |
+          ln -sf /usr/share/zoneinfo/Europe/Kiev /etc/localtime
+          echo "Europe/Kiev" > /etc/timezone
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
+
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y bash
+
+      - name: Run file count script
+        run: |
+          chmod +x calc_files.sh
+          ./calc_files.sh --check_dir=.
+
