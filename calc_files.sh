@@ -24,4 +24,4 @@ if [ ! -d "$DIRECTORY" ]; then
     exit 2
 fi
 FILE_COUNT=$(find "$DIRECTORY" -type f | wc -l)
-echo "Number of files in $DIRECTORY: $FILE_COUNT" 
+echo "Number of files in $DIRECTORY: $FILE_COUNT"

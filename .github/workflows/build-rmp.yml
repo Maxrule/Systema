@@ -54,4 +54,4 @@ jobs:
             ~/rpmbuild/RPMS/*.rpm
             ~/rpmbuild/SRPMS/*.src.rpm
 
- 
+
