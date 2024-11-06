@@ -29,3 +29,4 @@ EXPOSE 50000
 
 # Start Jenkins
 CMD ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
+
